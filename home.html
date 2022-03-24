@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content%}
+<br>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 25%">Record</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      {% for entry in record.entries %}
+      <tr>
+        <td scope="row" style="width: 25%">
+          {{unities.get(entry.unity_id).get('name')}} {{entry.value}} {{unities.get(entry.unity_id).get('unity')}}
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- {% for record in records %} -->
+<!-- {% for entry in record.entries %} -->
+<!-- {{unities.get(entry.unity_id).get('name')}} {{entry.value}} {{unities.get(entry.unity_id).get('unity')}} -->
+<!-- {% endfor %} -->
+<!-- {% endfor %} -->
+
+<!-- Trigger the modal with a button -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add New Record</button>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <form method='POST' action="{{url_for('add_data')}}">
+          <div class="mb-3">
+            <label class="form-label">Input Value</label>
+            <input class="form-control" name="entry_value">
+          </div>
+          <div class="container">
+            <div class='row row-cols-1 w-100'>
+              <div class='col'>
+                <select class="form-select" aria-label="Default select example" name="entry_unity">
+                  <option selected value="0">Choose Unity</option>
+                  {% for unity_id in unities %}
+                  <option value="{{ unity_id }}"> {{unities.get(unity_id).get('name')}} -
+                    {{unities.get(unity_id).get('unity')}} </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <br>
+              <div class='col'>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+              <!-- flash code from  https://flask.palletsprojects.com/en/2.0.x/patterns/flashing/ -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              <ul class=flashes>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
